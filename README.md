@@ -64,7 +64,7 @@ Run the server
 
 ---
 
-## Adding Proxie Routes
+## Adding Proxy Routes
 To add additional routes for TMDb, add a function in the `controllers/proxy.go` file: 
 ```go
 func ExampleProxy(c *gin.Context) {
