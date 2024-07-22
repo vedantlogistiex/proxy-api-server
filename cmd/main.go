@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/thewolmer/proxy-api-server/config"
 	"github.com/thewolmer/proxy-api-server/controllers"
-	"github.com/thewolmer/proxy-api-server/middlewares"
+	// "github.com/thewolmer/proxy-api-server/middlewares"
 )
 
 func init() {
@@ -16,11 +16,9 @@ func init() {
 
 func main() {
 	r := gin.Default()
-	r.Use(middlewares.CheckHeaderMiddleware())
+	// r.Use(middlewares.CheckHeaderMiddleware())
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Welcome to the Proxy Server",
-		})
+		c.JSON(200, gin.H{"success": "true", "available_routes": "/v1/tmdb/, /v1/github/"})
 	})
 
 	// TMDb proxy route
