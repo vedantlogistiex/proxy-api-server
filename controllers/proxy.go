@@ -10,22 +10,22 @@ import (
 )
 
 func TMDbProxy(c *gin.Context) {
-	// Get API key from env
 	apiKey := os.Getenv("TMDB_API_KEY")
 	if apiKey == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "TMDB_API_KEY not set"})
 		return
 	}
 
-	// Append api_key to query params
+	println("👉 Incoming request path:", c.Request.URL.Path)
+
 	query := c.Request.URL.Query()
 	query.Set("api_key", apiKey)
 	c.Request.URL.RawQuery = query.Encode()
 
-	// Proxy to TMDb
 	proxy := utils.CreateReverseProxy("https://api.themoviedb.org/3", "/v1/tmdb")
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
+
 
 func GitHubProxy(c *gin.Context) {
 	proxy := utils.CreateReverseProxy("https://api.github.com", "/v1/github")
