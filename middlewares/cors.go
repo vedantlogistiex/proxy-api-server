@@ -6,6 +6,13 @@ import (
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// Remove existing CORS headers (if any)
+		c.Writer.Header().Del("Access-Control-Allow-Origin")
+		c.Writer.Header().Del("Access-Control-Allow-Credentials")
+		c.Writer.Header().Del("Access-Control-Allow-Headers")
+		c.Writer.Header().Del("Access-Control-Allow-Methods")
+
+		// Add CORS headers again
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-WPROXY-KEY, Authorization")
