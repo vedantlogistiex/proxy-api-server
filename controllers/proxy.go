@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"net/http"
-	"net/url"
+	// "net/url"
 
 	"github.com/gin-gonic/gin"
 	"github.com/thewolmer/proxy-api-server/utils"
