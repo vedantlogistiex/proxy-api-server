@@ -7,20 +7,26 @@ import (
 	"strings"
 )
 
-func CreateReverseProxy(targetHost string, pathPrefix string) *httputil.ReverseProxy {
-	targetURL, _ := url.Parse(targetHost)
+func CreateReverseProxy(target string, pathPrefix string) *httputil.ReverseProxy {
+	url, _ := url.Parse(target)
+	proxy := httputil.NewSingleHostReverseProxy(url)
 
-	return &httputil.ReverseProxy{
-		Director: func(req *http.Request) {
-			// Remove the prefix (e.g., "/v1/tmdb") from the incoming path
-			req.URL.Path = strings.TrimPrefix(req.URL.Path, pathPrefix)
-
-			// Set the host and scheme
-			req.URL.Scheme = targetURL.Scheme
-			req.URL.Host = targetURL.Host
-
-			// Copy over the original query params
-			req.Host = targetURL.Host
-		},
+	// Modify Response to fix CORS headers
+	proxy.ModifyResponse = func(resp *http.Response) error {
+		resp.Header.Del("Access-Control-Allow-Origin")
+		resp.Header.Del("Access-Control-Allow-Credentials")
+		resp.Header.Del("Access-Control-Allow-Headers")
+		resp.Header.Del("Access-Control-Allow-Methods")
+		resp.Header.Del("Access-Control-Expose-Headers")
+		return nil
 	}
+
+	proxy.Director = func(req *http.Request) {
+		req.URL.Scheme = url.Scheme
+		req.URL.Host = url.Host
+		req.URL.Path = strings.TrimPrefix(req.URL.Path, pathPrefix)
+		req.Host = url.Host
+	}
+
+	return proxy
 }
