@@ -1,11 +1,28 @@
 package controllers
 
 import (
+	"net/http"
+	"net/url"
+
 	"github.com/gin-gonic/gin"
 	"github.com/thewolmer/proxy-api-server/utils"
+	"os"
 )
 
 func TMDbProxy(c *gin.Context) {
+	// Get API key from env
+	apiKey := os.Getenv("TMDB_API_KEY")
+	if apiKey == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "TMDB_API_KEY not set"})
+		return
+	}
+
+	// Append api_key to query params
+	query := c.Request.URL.Query()
+	query.Set("api_key", apiKey)
+	c.Request.URL.RawQuery = query.Encode()
+
+	// Proxy to TMDb
 	proxy := utils.CreateReverseProxy("https://api.themoviedb.org/3", "/v1/tmdb")
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
