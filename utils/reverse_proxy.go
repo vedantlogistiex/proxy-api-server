@@ -5,6 +5,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"strings"
+	"fmt"
 )
 
 func CreateReverseProxy(target string, pathPrefix string) *httputil.ReverseProxy {
@@ -26,6 +27,8 @@ func CreateReverseProxy(target string, pathPrefix string) *httputil.ReverseProxy
 		req.URL.Host = url.Host
 		req.URL.Path = strings.TrimPrefix(req.URL.Path, pathPrefix)
 		req.Host = url.Host
+		fmt.Println("🔁 Forwarding to:", req.URL.String())
+
 	}
 
 	return proxy
