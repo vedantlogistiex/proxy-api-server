@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func CreateReverseProxy(target string, pathPrefix string) *httputil.ReverseProxy {
+func CreateReverseProxyyyyy(target string, pathPrefix string) *httputil.ReverseProxy {
 	url, _ := url.Parse(target)
 	proxy := httputil.NewSingleHostReverseProxy(url)
 
